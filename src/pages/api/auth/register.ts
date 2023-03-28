@@ -25,7 +25,6 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
     default:
       const {status, message} = ApiError.MethodNotAllowed()
       res.status(status).json({success: false, message})
-      break
   }
 }
 

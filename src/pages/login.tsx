@@ -6,7 +6,6 @@ import AlertError from "@/containers/AlertError"
 import LinkNext from "next/link"
 import PasswordInput from "@/components/PasswordInput"
 import {useHandlerOnSign} from "@/hooks/useHandlerOnSign"
-import {useSession} from "next-auth/react"
 
 export default function Login() {
   const {watch, register, formState: {errors, isValid}, reset, setValue, control} = useForm<TUserLogin>({
@@ -18,9 +17,6 @@ export default function Login() {
     }
   })
   const {errorMessage, setErrorMessage, handleOnSign} = useHandlerOnSign({isValid, watch})
-  const {data: session} = useSession()
-
-  // console.log(session)
 
   return (
     <Container sx={{minHeight: "calc(100vh - 50px)", display: "flex", alignItems: "center"}}>

@@ -1,6 +1,12 @@
-export class ApiError extends Error {
-  status: number;
-  errors: unknown[];
+export interface IApiError {
+  status: number
+  message: string
+  errors?: unknown[]
+}
+
+export class ApiError extends Error implements IApiError {
+  status;
+  errors;
   constructor(status: number, message: string, errors: unknown[] = []) {
     super(message);
     this.status = status;
