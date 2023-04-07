@@ -3,8 +3,11 @@ import {ApiError} from "@/extensions/ApiError"
 import PostService from "@/services/PostService"
 import withValidation from "@/validators/validate"
 import {IPostSchema, postSchema} from "@/validators/schemas/postSchema"
+import dbConnect from "@/lib/dbConnect"
 
 async function handler(req: NextApiRequest, res: NextApiResponse) {
+  await dbConnect()
+
   const {method} = req
   const {id} = req.query
 

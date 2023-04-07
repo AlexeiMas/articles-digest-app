@@ -1,8 +1,8 @@
 import React from 'react'
 import {useForm} from "react-hook-form"
-import {Box, Button, Container, Link, Stack, TextField, Typography} from "@mui/material"
+import {Box, Button, Link, Stack, TextField, Typography} from "@mui/material"
 import {TUserLogin} from "@/validators/schemas/authSchema"
-import AlertError from "@/containers/AlertError"
+import AlertError from "@/components/AlertError"
 import LinkNext from "next/link"
 import PasswordInput from "@/components/PasswordInput"
 import {useHandlerOnSign} from "@/hooks/useHandlerOnSign"
@@ -19,7 +19,7 @@ export default function Login() {
   const {errorMessage, setErrorMessage, handleOnSign} = useHandlerOnSign({isValid, watch})
 
   return (
-    <Container sx={{minHeight: "calc(100vh - 50px)", display: "flex", alignItems: "center"}}>
+    <Box display={"grid"} minHeight={"calc(100vh - 200px)"} sx={{placeItems: "center"}} pb={4}>
       <Box
         component={"form"} mx={"auto"}
         px={{xs: 2, sm: 4}} py={3}
@@ -32,7 +32,7 @@ export default function Login() {
             required: "Field is important for filling",
             pattern: {
               value: /^[\w-.]+@([\w-]+\.)+[\w-]{2,}$/,
-              message: "Entered value does not watch email format"
+              message: "Entered value does not match email format"
             }
           })}
           required
@@ -67,6 +67,6 @@ export default function Login() {
           </Stack>
         </Stack>
       </Box>
-    </Container>
+    </Box>
   )
 }

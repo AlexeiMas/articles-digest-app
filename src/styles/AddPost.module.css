@@ -1,0 +1,18 @@
+.title input {
+  font-size: 42px;
+  font-weight: 900;
+}
+.title div:before, .title div:after {
+  display: none;
+}
+.editor {
+  margin: 30px -30px;
+}
+.editor :global .cm-s-easymde {
+  border: 0;
+  font-size: 22px;
+}
+.editor :global .editor-toolbar {
+  border: 0;
+  background-color: rgb(0 0 0 / 2%);
+}

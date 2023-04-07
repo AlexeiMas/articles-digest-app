@@ -3,8 +3,11 @@ import withValidation, {TNextApiReqWithId} from "@/validators/validate"
 import {IPostSchema, postSchema} from "@/validators/schemas/postSchema"
 import PostService from "@/services/PostService"
 import {ApiError, IApiError} from "@/extensions/ApiError"
+import dbConnect from "@/lib/dbConnect"
 
 async function handler(req: NextApiRequest, res: NextApiResponse) {
+  await dbConnect()
+
   const {method} = req
 
   switch (method) {

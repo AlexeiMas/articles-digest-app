@@ -6,10 +6,10 @@ import UserService from "@/services/UserService"
 import {ApiError} from "@/extensions/ApiError"
 
 async function handler(req: NextApiRequest, res: NextApiResponse) {
-  const {method} = req
-  
   await dbConnect()
-  
+
+  const {method} = req
+
   switch (method) {
     case 'POST':
       try {

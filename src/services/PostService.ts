@@ -23,7 +23,7 @@ class PostService {
         {_id: id},
         {$inc: {viewsCount: 1}},
         {returnDocument: "after"},
-      )
+      ).populate('user', 'fullName avatarUrl').exec()
     } catch (e) {
       throw ApiError.NotFound('Post is not found')
     }
@@ -46,6 +46,11 @@ class PostService {
     } catch (e) {
       throw ApiError.NotFound('Post is not found')
     }
+  }
+
+  async getLastTags(limit: number = 5) {
+    const data = await Post.find({}, 'tags').limit(limit).exec()
+    return [...new Set(data.flatMap(el => el.tags).slice(0, limit))]
   }
 }
 

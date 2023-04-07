@@ -1,8 +1,8 @@
 import React from 'react'
 import {useForm} from "react-hook-form"
-import {Box, Button, Container, Link, Stack, TextField, Typography} from "@mui/material"
+import {Box, Button, Link, Stack, TextField, Typography} from "@mui/material"
 import {IUserSchema} from "@/validators/schemas/authSchema"
-import AlertError from "@/containers/AlertError"
+import AlertError from "@/components/AlertError"
 import LinkNext from "next/link"
 import {useHandlerOnSign} from "@/hooks/useHandlerOnSign"
 import PasswordInput from "@/components/PasswordInput"
@@ -18,10 +18,15 @@ export default function Register() {
       avatarUrl: ''
     }
   })
-  const {errorMessage, setErrorMessage, handleOnSign} = useHandlerOnSign({signType: "up", isValid, watch, href: "/login"})
+  const {errorMessage, setErrorMessage, handleOnSign} = useHandlerOnSign({
+    signType: "up",
+    isValid,
+    watch,
+    href: "/login"
+  })
 
   return (
-    <Container sx={{minHeight: "calc(100vh - 50px)", display: "flex", alignItems: "center"}}>
+    <Box display={"grid"} minHeight={"calc(100vh - 120px)"} sx={{placeItems: "center"}} pb={4}>
       <Box
         component={"form"} mx={"auto"}
         px={{xs: 2, sm: 4}} py={3}
@@ -34,7 +39,7 @@ export default function Register() {
             required: "Field is important for filling",
             pattern: {
               value: /^[\w-.]+@([\w-]+\.)+[\w-]{2,}$/,
-              message: "Entered value does not watch email format"
+              message: "Entered value does not match email format"
             }
           })}
           required
@@ -114,6 +119,6 @@ export default function Register() {
           </Stack>
         </Stack>
       </Box>
-    </Container>
+    </Box>
   )
 }
