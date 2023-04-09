@@ -1,11 +1,11 @@
 import React from 'react'
 import {Avatar, Divider, List, ListItem, ListItemAvatar, ListItemText, Skeleton} from "@mui/material"
 import SideBlock from "@/components/SideBlock"
-import {IPost} from "@/components/Post"
+import {IUserSchemaWithId} from "@/dtos/UserDto"
 
 export type TItems = {
   isLoading: boolean
-  items: (Pick<IPost, "user"> & {text: string})[]
+  items: ({ user: Pick<IUserSchemaWithId, "fullName" | "avatarUrl"> } & {text: string})[]
 }
 
 const CommentsBlock = ({children, items, isLoading}: React.PropsWithChildren<TItems>) => {

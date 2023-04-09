@@ -2,10 +2,12 @@ import {Action, combineReducers, configureStore, ThunkAction} from "@reduxjs/too
 import {createWrapper} from "next-redux-wrapper"
 import {postsReducer} from "@/store/slices/posts"
 import {persistReducer, persistStore} from "redux-persist"
-import {FLUSH, PAUSE, PERSIST, PURGE, REGISTER, REHYDRATE} from "redux-persist"
-import {postsApi} from "@/store/apis/posts.api"
-import {tagsApi} from "@/store/apis/tags.api"
 import createWebStorage from 'redux-persist/lib/storage/createWebStorage'
+import {FLUSH, PAUSE, PERSIST, PURGE, REGISTER, REHYDRATE} from "redux-persist"
+import {postsApi} from "@/store/services/posts.api"
+import {tagsApi} from "@/store/services/tags.api"
+import {uploadsApi} from "@/store/services/uploads.api"
+import {imagesApi} from "@/store/services/images.api"
 
 const createNoopStorage = () => {
   return {
@@ -19,7 +21,9 @@ const storage = typeof window !== 'undefined' ? createWebStorage('local') : crea
 const rootReducer = combineReducers({
   posts: postsReducer,
   [postsApi.reducerPath]: postsApi.reducer,
-  [tagsApi.reducerPath]: tagsApi.reducer
+  [tagsApi.reducerPath]: tagsApi.reducer,
+  [uploadsApi.reducerPath]: uploadsApi.reducer,
+  [imagesApi.reducerPath]: imagesApi.reducer
 })
 
 const makeConfiguredStore = () =>
@@ -48,7 +52,7 @@ const makeStore = () => {
           serializableCheck: {
             ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER]
           },
-        }).concat(postsApi.middleware, tagsApi.middleware)
+        }).concat(postsApi.middleware, tagsApi.middleware, uploadsApi.middleware, imagesApi.middleware)
     })
     store.__persistor = persistStore(store)
     return store

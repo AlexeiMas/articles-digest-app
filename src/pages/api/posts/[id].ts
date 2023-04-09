@@ -16,16 +16,16 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
       case "GET":
         return PostService.getOne(String(id))
           .then(doc => res.json(doc))
-          .catch(err => res.status(err.status).json(err.message))
+          .catch(err => res.status(err.status).json({message: err.message}))
       case "DELETE":
         return PostService.remove(String(id))
           .then(doc => res.json({message: "Post was removed successfully"}))
-          .catch(err => res.status(err.status).json(err.message))
+          .catch(err => res.status(err.status).json({message: err.message}))
       case "PATCH":
         const {body} = req
         return PostService.update({id: String(id), ...body})
           .then(doc => res.json({message: "Post was updated successfully"}))
-          .catch(err => res.status(err.status).json(err.message))
+          .catch(err => res.status(err.status).json({message: err.message}))
       default:
         const {status, message} = ApiError.MethodNotAllowed()
         return res.status(status).json({message})

@@ -2,10 +2,10 @@ import React from 'react'
 import Post from "@/components/Post"
 import CommentsBlock from "@/components/CommentsBlock"
 import AddComment from "@/components/AddComment"
-import {Typography} from "@mui/material"
-import {NextRouter, withRouter} from "next/router"
-import {useGetPostByIdQuery} from "@/store/apis/posts.api"
 import PostSkeleton from "@/components/Post/Skeleton"
+import {NextRouter, withRouter} from "next/router"
+import {useGetPostByIdQuery} from "@/store/services/posts.api"
+import ReactMarkdown from "react-markdown"
 
 const FullPost = ({router: {query}}: { router: NextRouter }) => {
   const {id} = query as {id: string}
@@ -28,9 +28,7 @@ const FullPost = ({router: {query}}: { router: NextRouter }) => {
         tags={data.tags}
         isFullPost
       >
-        <Typography paragraph>
-          {data.text}
-        </Typography>
+        <ReactMarkdown children={data.text || ""} />
       </Post>
       <CommentsBlock
         items={[

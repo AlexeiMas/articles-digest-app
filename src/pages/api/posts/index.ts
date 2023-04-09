@@ -21,8 +21,8 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
     case "POST":
       try {
         const {user} = req as TNextApiReqWithId
-        await PostService.create({...req.body, user})
-        return res.json({ message: 'The post was created successfully' })
+        const postId = await PostService.create({...req.body, user})
+        return res.json({ message: 'The post was created successfully', postId })
       } catch (e) {
         const {status, message} = e as IApiError
         return res.status(status).json({message})

@@ -22,7 +22,7 @@ const Header = ({router: {pathname, push}}: { router: NextRouter }) => {
           <Stack direction={"row"} justifyContent={"space-between"} gap={1}>
             {isAuth ? (
               <>
-                <Button variant={"contained"} component={Link} href={"/posts/create"}>New post</Button>
+                <Button variant={"contained"} component={Link} href={"/add-post"}>New post</Button>
                 <Button variant={"contained"} color={"error"} onClick={logoutHandler}>Log out</Button>
               </>
             ) : (

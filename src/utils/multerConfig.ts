@@ -1,5 +1,6 @@
 import multer from "multer"
 import * as fs from "fs"
+import path from "path"
 
 const storage = multer.diskStorage({
   destination: (_, __, cb) => {
@@ -10,7 +11,10 @@ const storage = multer.diskStorage({
     cb(null, directory)
   },
   filename(_, file: Express.Multer.File, cb: (error: (Error | null), filename: string) => void) {
-    cb(null, file.originalname)
+    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
+    const ext = path.extname(file.originalname);
+    cb(null, `${uniqueSuffix}${ext}`)
+    // cb(null, file.originalname)
   }
 })
 

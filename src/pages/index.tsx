@@ -5,13 +5,17 @@ import Post from "@/components/Post"
 import CommentsBlock from "@/components/CommentsBlock"
 import TagsBlock from "@/components/TagsBlock"
 import PostSkeleton from "@/components/Post/Skeleton"
-import {useGetAllPostsQuery} from "@/store/apis/posts.api"
-import {useGetLastTagsQuery} from "@/store/apis/tags.api"
+import {useGetAllPostsQuery} from "@/store/services/posts.api"
+import {useGetLastTagsQuery} from "@/store/services/tags.api"
+import {useSession} from "next-auth/react"
+import {IUserDto} from "@/dtos/UserDto"
 
 export default function Home() {
   const {data, isLoading} = useGetAllPostsQuery(void 0, {refetchOnMountOrArgChange: true})
   const {data: tags, isLoading: isTagsLoading} = useGetLastTagsQuery()
+  const {data: session} = useSession()
 
+  const userId = useMemo(() => (session?.user as IUserDto)?.id, [session])
   const Skeleton = useMemo(() => [...Array(5)].map((_, i) => <PostSkeleton key={i}/>), [])
 
   return (
@@ -40,6 +44,7 @@ export default function Home() {
                 viewsCount={item.viewsCount}
                 commentsCount={item.commentsCount}
                 tags={item.tags}
+                isEditable={userId === item.user._id}
               />
             )}
           </Grid>

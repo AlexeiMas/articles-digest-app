@@ -25,10 +25,10 @@ export default function handler(req: IExtendedNextApiRequest, res: NextApiRespon
             const {status, message, errors} = ApiError.InternalServerError("", err)
             return res.status(status).json({ message, errors });
           }
-          const {originalname: originalName, destination} = req.file
+          const {filename, destination} = req.file
           return res.status(200).json({
             success: true,
-            url: '/' + destination.split('/')[1].concat('/' + originalName)
+            url: destination.split('/')[1].concat('/' + filename)
           });
         });
       }

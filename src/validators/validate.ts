@@ -17,12 +17,13 @@ const withValidation = <T>(
 
   return async (req, res) => {
     const {method} = req
+    const isSingUpUrl = req.url === process.env.SIGNUP_URL
     if (method === "GET") {
       return handler(req, res)
     }
     if (req.method === "POST" || "PATCH" || "PUT") {
       const session = await checkAuth(req, res)
-      if (session) {
+      if (session || isSingUpUrl) {
         const isValid = validate(req.body)
         if (!isValid) {
           const {
@@ -32,9 +33,11 @@ const withValidation = <T>(
           } = ApiError.BadRequest('Invalid request body', validate.errors as DefinedError[])
           return res.status(status).json({message, errors: errors as DefinedError[]})
         }
-        const userId = (session?.user as IUserDto).id
-        if (userId) {
-          (req as TNextApiReqWithId).user = userId
+        if (!isSingUpUrl) {
+          const userId = (session?.user as IUserDto).id
+          if (userId) {
+            (req as TNextApiReqWithId).user = userId
+          }
         }
         return handler(req, res)
       }

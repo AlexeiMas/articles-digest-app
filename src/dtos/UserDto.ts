@@ -1,6 +1,7 @@
 import {IUserSchema} from "@/validators/schemas/authSchema"
 
 export interface IUserDto extends Record<"id" | "email" | "name" | "image", string> {}
+export interface IUserSchemaWithId extends Record<keyof IUserSchema | "_id", string> {}
 
 export class UserDto implements IUserDto {
   id;
@@ -8,7 +9,7 @@ export class UserDto implements IUserDto {
   name;
   image;
 
-  constructor(model: Record<keyof IUserSchema | "_id", string>) {
+  constructor(model: IUserSchemaWithId) {
     this.id = model._id
     this.email = model.email
     this.name = model.fullName

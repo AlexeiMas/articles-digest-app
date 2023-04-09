@@ -2,7 +2,7 @@ import React from 'react'
 import {useForm} from "react-hook-form"
 import {Box, Button, Link, Stack, TextField, Typography} from "@mui/material"
 import {IUserSchema} from "@/validators/schemas/authSchema"
-import AlertError from "@/components/AlertError"
+import AlertComponent from "@/components/AlertComponent"
 import LinkNext from "next/link"
 import {useHandlerOnSign} from "@/hooks/useHandlerOnSign"
 import PasswordInput from "@/components/PasswordInput"
@@ -104,7 +104,7 @@ export default function Register() {
           InputLabelProps={{shrink: true}}
         />
 
-        <AlertError message={errorMessage} open={!!errorMessage} setOpen={setErrorMessage}/>
+        <AlertComponent message={errorMessage} open={!!errorMessage} setOpen={setErrorMessage}/>
         <Stack alignItems={"center"} gap={1}>
           <Button
             variant={"outlined"}

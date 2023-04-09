@@ -2,7 +2,7 @@ import React from 'react'
 import {useForm} from "react-hook-form"
 import {Box, Button, Link, Stack, TextField, Typography} from "@mui/material"
 import {TUserLogin} from "@/validators/schemas/authSchema"
-import AlertError from "@/components/AlertError"
+import AlertComponent from "@/components/AlertComponent"
 import LinkNext from "next/link"
 import PasswordInput from "@/components/PasswordInput"
 import {useHandlerOnSign} from "@/hooks/useHandlerOnSign"
@@ -52,7 +52,7 @@ export default function Login() {
           error={!!errors.password}
           helperText={errors.password?.message}
         />
-        <AlertError message={errorMessage} open={!!errorMessage} setOpen={setErrorMessage}/>
+        <AlertComponent message={errorMessage} open={!!errorMessage} setOpen={setErrorMessage}/>
         <Stack alignItems={"center"} gap={1}>
           <Button
             variant={"outlined"}

@@ -6,10 +6,10 @@ import EyeIcon from '@mui/icons-material/RemoveRedEyeOutlined'
 import CommentIcon from '@mui/icons-material/ChatBubbleOutlineOutlined'
 import Image from "next/image"
 import cn from "classnames"
-import {IUserSchema} from "@/validators/schemas/authSchema"
 import UserInfo from "@/components/UserInfo"
 import Link from "next/link"
 import styles from "./Post.module.css"
+import {IUserSchemaWithId} from "@/dtos/UserDto"
 
 export interface IPost {
   _id: string | number
@@ -17,7 +17,7 @@ export interface IPost {
   text?: string
   createdAt: string
   imageUrl: string
-  user: Pick<IUserSchema, "fullName" | "avatarUrl">
+  user: Pick<IUserSchemaWithId, "fullName" | "avatarUrl" | "_id">
   viewsCount: number
   commentsCount: number
   tags: string[]

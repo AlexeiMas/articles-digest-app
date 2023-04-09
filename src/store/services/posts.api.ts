@@ -1,5 +1,6 @@
 import {createApi, fetchBaseQuery} from '@reduxjs/toolkit/query/react'
 import {IPost} from "@/components/Post"
+import {IPostSchema} from "@/validators/schemas/postSchema"
 
 export const postsApi = createApi({
   reducerPath: 'postsApi',
@@ -15,8 +16,15 @@ export const postsApi = createApi({
       query: (id: string) => ({
         url: `/api/posts/${id}`,
       })
+    }),
+    createPost: builder.mutation<{message: string, postId?: string}, Omit<IPostSchema, "user">>({
+      query: (data) => ({
+        url: `/api/posts`,
+        method: 'POST',
+        body: data
+      })
     })
   })
 })
 
-export const {useGetAllPostsQuery, useGetPostByIdQuery} = postsApi
+export const {useGetAllPostsQuery, useGetPostByIdQuery, useCreatePostMutation} = postsApi

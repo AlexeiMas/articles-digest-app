@@ -2,7 +2,10 @@
 const nextConfig = {
   reactStrictMode: true,
   images: {
-    domains: ["res.cloudinary.com", "i.stack.imgur.com"]
+    domains: ["localhost", "res.cloudinary.com", "i.stack.imgur.com"]
+  },
+  env: {
+    API_URL: process.env.API_URL
   }
 }
 

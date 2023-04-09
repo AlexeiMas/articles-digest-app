@@ -1,15 +1,17 @@
 import React from 'react'
-import {Alert, Box, Snackbar} from "@mui/material"
+import {Alert, AlertColor, Box, Snackbar} from "@mui/material"
 
+export type TAlertState = {type: AlertColor, message: string}
 export type TAlertError = {
   message: string,
   open: boolean
-  setOpen: React.Dispatch<React.SetStateAction<string>>
+  setOpen: React.Dispatch<React.SetStateAction<TAlertState>>
+  variant?: AlertColor
 }
 
-const AlertError = ({message, open, setOpen}: TAlertError) => {
+const AlertComponent = ({message, open, setOpen, variant}: TAlertError) => {
   const onClose = React.useCallback(() => {
-    setOpen('')
+    setOpen({type: "error", message: ""})
   }, [open])
 
   return (
@@ -20,7 +22,7 @@ const AlertError = ({message, open, setOpen}: TAlertError) => {
         onClose={onClose}
       >
         <Alert
-          severity={"error"}
+          severity={variant || "error"}
           onClose={onClose}
           sx={{mb: 2}}
         >
@@ -31,4 +33,4 @@ const AlertError = ({message, open, setOpen}: TAlertError) => {
   )
 }
 
-export default AlertError
+export default AlertComponent

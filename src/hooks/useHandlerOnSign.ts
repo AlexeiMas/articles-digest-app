@@ -2,6 +2,7 @@ import React from "react"
 import {signIn} from "next-auth/react"
 import {useRouter} from "next/router"
 import {IUserSchema} from "@/validators/schemas/authSchema"
+import {TAlertState} from "@/components/AlertComponent"
 
 export type TUseHandler = {
   signType?: "in" | "up"
@@ -11,7 +12,7 @@ export type TUseHandler = {
 }
 
 export const useHandlerOnSign = ({signType = "in", isValid, watch, href = '/'}: TUseHandler) => {
-  const [errorMessage, setErrorMessage] = React.useState<string>('')
+  const [errorMessage, setErrorMessage] = React.useState<TAlertState>({type: "error", message: ""})
   const router = useRouter()
 
   const handleOnSign = React.useCallback( () => {
@@ -22,13 +23,13 @@ export const useHandlerOnSign = ({signType = "in", isValid, watch, href = '/'}: 
           signIn('credentials', {...authState, redirect: false})
             .then(response => {
               if (response?.ok) {
-                errorMessage && setErrorMessage('')
+                errorMessage.message && setErrorMessage(prevState => ({...prevState, message: ""}))
                 return router.push(href)
               }
               if (!response?.ok && response?.error) {
-                setErrorMessage(response.error)
+                setErrorMessage(prevState => ({...prevState, message: response.error || ""}))
               } else {
-                errorMessage && setErrorMessage('')
+                errorMessage.message && setErrorMessage(prevState => ({...prevState, message: ""}))
               }
             })
             .catch(error => console.log(error.message))
@@ -46,10 +47,10 @@ export const useHandlerOnSign = ({signType = "in", isValid, watch, href = '/'}: 
             .then(res => {
               res.json()
                 .then(result => {
-                  if (!result.hasOwnProperty('success')) {
+                  if (result.success) {
                     return router.push(href)
                   }
-                  setErrorMessage(result.message)
+                  setErrorMessage(prevState => ({...prevState, message: result.message}))
                 })
             })
             .catch(err => console.log(err))
@@ -58,7 +59,7 @@ export const useHandlerOnSign = ({signType = "in", isValid, watch, href = '/'}: 
   }, [isValid])
 
   return {
-    errorMessage,
+    errorMessage: errorMessage.message,
     setErrorMessage,
     handleOnSign
   }

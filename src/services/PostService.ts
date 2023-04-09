@@ -7,7 +7,8 @@ class PostService {
   async create({...args}: IPostSchema) {
     try {
       const doc = new Post<IPostSchema>({...args})
-      return await doc.save()
+      const data = await doc.save()
+      return data._id
     } catch (e) {
       throw ApiError.InternalServerError((e as Error).message)
     }
