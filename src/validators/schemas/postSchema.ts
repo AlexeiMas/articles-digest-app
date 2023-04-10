@@ -22,3 +22,5 @@ export const postSchema: JSONSchemaType<IPostSchema> = {
   required: ['title', 'text'],
   additionalProperties: false
 }
+
+export type TPostDataForPage = Omit<IPostSchema, "user" | "viewsCount">

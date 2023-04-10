@@ -11,7 +11,7 @@ type TTagsBlock = {
 
 const TagsBlock = ({isLoading, items}: TTagsBlock) => {
   return (
-    <SideBlock title="Тэги">
+    <SideBlock title="Tags">
       <List>
         {(isLoading ? [...Array(5)] : items).map((name, i) => (
           <Link
@@ -24,11 +24,10 @@ const TagsBlock = ({isLoading, items}: TTagsBlock) => {
                 <ListItemIcon>
                   <TagIcon/>
                 </ListItemIcon>
-                {isLoading ? (
-                  <Skeleton width={100}/>
-                ) : (
-                  <ListItemText primary={name}/>
-                )}
+                {isLoading
+                  ? <Skeleton width={100}/>
+                  : <ListItemText primary={name}/>
+                }
               </ListItemButton>
             </ListItem>
           </Link>

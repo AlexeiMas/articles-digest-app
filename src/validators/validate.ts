@@ -21,7 +21,7 @@ const withValidation = <T>(
     if (method === "GET") {
       return handler(req, res)
     }
-    if (req.method === "POST" || "PATCH" || "PUT") {
+    if (["POST", "PATCH"].includes(method || '')) {
       const session = await checkAuth(req, res)
       if (session || isSingUpUrl) {
         const isValid = validate(req.body)

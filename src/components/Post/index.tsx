@@ -10,9 +10,11 @@ import UserInfo from "@/components/UserInfo"
 import Link from "next/link"
 import styles from "./Post.module.css"
 import {IUserSchemaWithId} from "@/dtos/UserDto"
+import {useRemovePostMutation} from "@/store/services/posts.api"
+import ConfirmComponent from "@/components/ConfirmComponent"
 
 export interface IPost {
-  _id: string | number
+  _id: string
   title: string
   text?: string
   createdAt: string
@@ -40,58 +42,66 @@ const Post = (
     isEditable,
   }: React.PropsWithChildren<IPost>
 ) => {
+  const [removePost] = useRemovePostMutation()
+  const [isConfirm, setIsConfirm] = React.useState<boolean>(false)
 
-  const onClickRemove = () => {
-  }
+  const onClickRemove = () => removePost(_id)
 
   return (
-    <div className={cn(styles.root, {[styles.rootFull]: isFullPost})}>
-      {isEditable && (
-        <div className={styles.editButtons}>
-          <IconButton component={Link} href={`/posts/${_id}/edit`} color="primary">
-            <EditIcon/>
-          </IconButton>
-          <IconButton onClick={onClickRemove} color="secondary">
-            <DeleteIcon/>
-          </IconButton>
-        </div>
-      )}
-      {imageUrl && (
-        <Image
-          width={630}
-          height={300}
-          className={cn(styles.image, {[styles.imageFull]: isFullPost})}
-          src={imageUrl}
-          alt={title}
-        />
-      )}
-      <div className={styles.wrapper}>
-        <UserInfo {...user} additionalText={createdAt}/>
-        <div className={styles.indention}>
-          <h2 className={cn(styles.title, {[styles.titleFull]: isFullPost})}>
-            {isFullPost ? title : <Link href={`/posts/${_id}`}>{title}</Link>}
-          </h2>
-          <ul className={styles.tags}>
-            {tags.map((name) => (
-              <li key={name}>
-                <Link href={`/tag/${name}`}>#{name}</Link>
+    <>
+      <div className={cn(styles.root, {[styles.rootFull]: isFullPost})}>
+        {isEditable && (
+          <div className={styles.editButtons}>
+            <IconButton component={Link} href={`/posts/${_id}/edit`} color="primary">
+              <EditIcon/>
+            </IconButton>
+            <IconButton onClick={() => setIsConfirm(true)} color="secondary">
+              <DeleteIcon/>
+            </IconButton>
+          </div>
+        )}
+        {imageUrl && (
+          <Image
+            width={630}
+            height={300}
+            className={cn(styles.image, {[styles.imageFull]: isFullPost})}
+            src={imageUrl}
+            alt={title}
+          />
+        )}
+        <div className={styles.wrapper}>
+          <UserInfo {...user} additionalText={createdAt}/>
+          <div className={styles.indention}>
+            <h2 className={cn(styles.title, {[styles.titleFull]: isFullPost})}>
+              {isFullPost ? title : <Link href={`/posts/${_id}`}>{title}</Link>}
+            </h2>
+            <ul className={styles.tags}>
+              {tags.map((name) => (
+                <li key={name}>
+                  <Link href={`/tag/${name}`}>#{name}</Link>
+                </li>
+              ))}
+            </ul>
+            {children && <div className={styles.content}>{children}</div>}
+            <ul className={styles.postDetails}>
+              <li>
+                <EyeIcon/>
+                <span>{viewsCount}</span>
               </li>
-            ))}
-          </ul>
-          {children && <div className={styles.content}>{children}</div>}
-          <ul className={styles.postDetails}>
-            <li>
-              <EyeIcon/>
-              <span>{viewsCount}</span>
-            </li>
-            <li>
-              <CommentIcon/>
-              <span>{commentsCount}</span>
-            </li>
-          </ul>
+              <li>
+                <CommentIcon/>
+                <span>{commentsCount}</span>
+              </li>
+            </ul>
+          </div>
         </div>
       </div>
-    </div>
+      <ConfirmComponent
+        message={`Are you sure, the post with title [${title}] will be removed?`}
+        open={isConfirm} setOpen={setIsConfirm}
+        onAcceptHandler={onClickRemove}
+      />
+    </>
   )
 }
 

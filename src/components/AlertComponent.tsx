@@ -2,14 +2,14 @@ import React from 'react'
 import {Alert, AlertColor, Box, Snackbar} from "@mui/material"
 
 export type TAlertState = {type: AlertColor, message: string}
-export type TAlertError = {
+export type TAlertComponent = {
   message: string,
   open: boolean
   setOpen: React.Dispatch<React.SetStateAction<TAlertState>>
   variant?: AlertColor
 }
 
-const AlertComponent = ({message, open, setOpen, variant}: TAlertError) => {
+const AlertComponent = ({message, open, setOpen, variant}: TAlertComponent) => {
   const onClose = React.useCallback(() => {
     setOpen({type: "error", message: ""})
   }, [open])
