@@ -2,10 +2,11 @@ import React from 'react'
 import "easymde/dist/easymde.min.css"
 import {useCreatePostMutation} from "@/store/services/posts.api"
 import {TPostDataForPage} from "@/validators/schemas/postSchema"
-import {NextRouter, withRouter} from "next/router"
+import {withRouter} from "next/router"
 import PostContainer from "@/containers/PostContainer"
+import {TRouter} from "@/types/general"
 
-const AddPost = ({router: {push}}: { router: NextRouter }) => {
+const AddPost = ({router: {push}}: TRouter) => {
   const [createPost] = useCreatePostMutation()
 
   const onSubmitHandler = (fields: TPostDataForPage) => {

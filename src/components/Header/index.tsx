@@ -1,10 +1,11 @@
 import React from 'react'
 import {Box, Button, Container, Stack} from "@mui/material"
 import Link from "next/link"
-import {NextRouter, withRouter} from "next/router"
+import {withRouter} from "next/router"
 import {signOut, useSession} from "next-auth/react"
+import {TRouter} from "@/types/general"
 
-const Header = ({router: {pathname, push}}: { router: NextRouter }) => {
+const Header = ({router: {pathname, push}}: TRouter) => {
   const {data: isAuth} = useSession()
 
   const logoutHandler = React.useCallback(() => {

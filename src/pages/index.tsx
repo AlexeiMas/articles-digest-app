@@ -1,6 +1,6 @@
 import Head from 'next/head'
 import {Grid, Tab, Tabs} from "@mui/material"
-import {useMemo} from "react"
+import {SyntheticEvent, useEffect, useMemo, useState} from "react"
 import Post from "@/components/Post"
 import CommentsBlock from "@/components/CommentsBlock"
 import TagsBlock from "@/components/TagsBlock"
@@ -9,14 +9,34 @@ import {useGetAllPostsQuery} from "@/store/services/posts.api"
 import {useGetLastTagsQuery} from "@/store/services/tags.api"
 import {useSession} from "next-auth/react"
 import {IUserDto} from "@/dtos/UserDto"
+import {useRouter} from "next/router"
+import {TSortBy} from "@/types/general"
 
 export default function Home() {
-  const {data, isLoading} = useGetAllPostsQuery(void 0, {refetchOnMountOrArgChange: true})
+  const {push, query} = useRouter()
+  const sortBy = query.sortBy as TSortBy
+  const {data, isLoading} = useGetAllPostsQuery(sortBy, {refetchOnMountOrArgChange: true})
   const {data: tags, isLoading: isTagsLoading} = useGetLastTagsQuery()
   const {data: session} = useSession()
+  const [value, setValue] = useState(0)
 
   const userId = useMemo(() => (session?.user as IUserDto)?.id, [session])
-  const Skeleton = useMemo(() => [...Array(5)].map((_, i) => <PostSkeleton key={i}/>), [])
+  const Skeleton = useMemo(() => [...Array(5)].map((_, i) => (
+      <Grid xs={12} item key={i}>
+        <PostSkeleton/>
+      </Grid>
+    )
+  ), [])
+
+  useEffect(() => {
+    if (sortBy === "viewsCount") {
+      setValue(1)
+    }
+  }, [sortBy])
+
+  const handleChange = (event: SyntheticEvent, newValue: number) => {
+    setValue(newValue)
+  }
 
   return (
     <>
@@ -27,26 +47,29 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico"/>
       </Head>
       <main>
-        <Tabs style={{marginBottom: 15}} value={0} aria-label="post tabs">
-          <Tab label="New"/>
-          <Tab label="Popular"/>
+        <Tabs style={{marginBottom: 15}} value={value} onChange={handleChange} aria-label="post tabs">
+          <Tab label="New" onClick={() => push({query: undefined})}/>
+          <Tab label="Popular" onClick={() => push({query: {sortBy: "viewsCount"}})}/>
         </Tabs>
         <Grid container spacing={4}>
           <Grid xs={8} item>
-            {isLoading ? Skeleton : data?.map((item) =>
-              <Post
-                key={item._id}
-                _id={item._id}
-                title={item.title}
-                createdAt={item.createdAt}
-                imageUrl={item.imageUrl}
-                user={item.user}
-                viewsCount={item.viewsCount}
-                commentsCount={item.commentsCount}
-                tags={item.tags}
-                isEditable={userId === item.user._id}
-              />
-            )}
+            <Grid container spacing={2}>
+              {isLoading ? Skeleton : data?.map((item) =>
+                <Grid xs={12} item key={item._id}>
+                  <Post
+                    _id={item._id}
+                    title={item.title}
+                    createdAt={item.createdAt}
+                    imageUrl={item.imageUrl}
+                    user={item.user}
+                    viewsCount={item.viewsCount}
+                    commentsCount={item.commentsCount}
+                    tags={item.tags}
+                    isEditable={userId === item.user._id}
+                  />
+                </Grid>
+              )}
+            </Grid>
           </Grid>
           <Grid xs={4} item>
             <TagsBlock items={tags || []} isLoading={isTagsLoading}/>

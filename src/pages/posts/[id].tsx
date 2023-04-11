@@ -3,11 +3,12 @@ import Post from "@/components/Post"
 import CommentsBlock from "@/components/CommentsBlock"
 import AddComment from "@/components/AddComment"
 import PostSkeleton from "@/components/Post/Skeleton"
-import {NextRouter, withRouter} from "next/router"
+import {withRouter} from "next/router"
 import {useGetPostByIdQuery} from "@/store/services/posts.api"
 import ReactMarkdown from "react-markdown"
+import {TRouter} from "@/types/general"
 
-const FullPost = ({router: {query}}: { router: NextRouter }) => {
+const FullPost = ({router: {query}}: TRouter) => {
   const {id} = query as {id: string}
   const {data, isLoading} = useGetPostByIdQuery(id, {skip: !id, refetchOnMountOrArgChange: true})
 

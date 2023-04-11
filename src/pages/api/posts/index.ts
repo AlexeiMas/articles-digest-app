@@ -4,6 +4,7 @@ import {IPostSchema, postSchema} from "@/validators/schemas/postSchema"
 import PostService from "@/services/PostService"
 import {ApiError, IApiError} from "@/extensions/ApiError"
 import dbConnect from "@/lib/dbConnect"
+import {TSortBy} from "@/types/general"
 
 async function handler(req: NextApiRequest, res: NextApiResponse) {
   await dbConnect()
@@ -12,7 +13,8 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
 
   switch (method) {
     case "GET":
-      const posts = await PostService.getAll()
+      const sortBy: TSortBy = req.query.sortBy === "viewsCount" ? "viewsCount" : "createdAt"
+      const posts = await PostService.getAll(sortBy)
       if (posts) {
         return res.json(posts)
       }

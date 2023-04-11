@@ -78,7 +78,7 @@ const Post = (
             <ul className={styles.tags}>
               {tags.map((name) => (
                 <li key={name}>
-                  <Link href={`/tag/${name}`}>#{name}</Link>
+                  <Link href={`/tags/${name}`}>#{name}</Link>
                 </li>
               ))}
             </ul>

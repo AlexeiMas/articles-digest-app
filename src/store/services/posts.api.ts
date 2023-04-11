@@ -2,6 +2,7 @@ import {createApi, fetchBaseQuery} from '@reduxjs/toolkit/query/react'
 import {IPost} from "@/components/Post"
 import {TPostDataForPage} from "@/validators/schemas/postSchema"
 import Required from "ajv/lib/vocabularies/validation/required"
+import {TSortBy} from "@/types/general"
 
 export const postsApi = createApi({
   reducerPath: 'postsApi',
@@ -9,9 +10,10 @@ export const postsApi = createApi({
   // refetchOnFocus: true,
   tagTypes: ["Posts"],
   endpoints: (builder) => ({
-    getAllPosts: builder.query<IPost[], void>({
-      query: () => ({
+    getAllPosts: builder.query<IPost[], TSortBy | undefined>({
+      query: (sortBy) => ({
         url: `/api/posts`,
+        params: sortBy ? {sortBy} : undefined
       }),
       providesTags: ["Posts"]
     }),
@@ -20,21 +22,21 @@ export const postsApi = createApi({
         url: `/api/posts/${id}`,
       })
     }),
-    createPost: builder.mutation<{message: string, postId?: string}, TPostDataForPage>({
+    createPost: builder.mutation<{ message: string, postId?: string }, TPostDataForPage>({
       query: (data) => ({
         url: `/api/posts`,
         method: 'POST',
         body: data
       })
     }),
-    removePost: builder.mutation<{message: string}, string>({
+    removePost: builder.mutation<{ message: string }, string>({
       query: (id) => ({
         url: `/api/posts/${id}`,
         method: 'DELETE'
       }),
       invalidatesTags: ["Posts"]
     }),
-    editPost: builder.mutation<{message: string}, {id: string, body: TPostDataForPage}>({
+    editPost: builder.mutation<{ message: string }, { id: string, body: TPostDataForPage }>({
       query: ({id, body}) => ({
         url: `/api/posts/${id}`,
         method: 'PATCH',
@@ -44,4 +46,10 @@ export const postsApi = createApi({
   })
 })
 
-export const {useGetAllPostsQuery, useGetPostByIdQuery, useCreatePostMutation, useRemovePostMutation, useEditPostMutation} = postsApi
+export const {
+  useGetAllPostsQuery,
+  useGetPostByIdQuery,
+  useCreatePostMutation,
+  useRemovePostMutation,
+  useEditPostMutation
+} = postsApi

@@ -3,6 +3,7 @@ import Post from "@/models/Post"
 import {Error} from "mongoose"
 import {ApiError} from "@/extensions/ApiError"
 import fs from "fs"
+import {TSortBy} from "@/types/general"
 
 class PostService {
   async create({...args}: IPostSchema) {
@@ -15,8 +16,8 @@ class PostService {
     }
   }
 
-  async getAll() {
-    return await Post.find({}, null, {sort: {"updatedAt": -1}}).populate('user', '-password').exec()
+  async getAll(sortBy: TSortBy = "createdAt") {
+    return await Post.find({}, null, {sort: {[sortBy]: -1}}).populate('user', '-password').exec()
   }
 
   async getOne(id: string) {
