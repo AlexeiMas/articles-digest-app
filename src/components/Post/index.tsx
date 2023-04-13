@@ -22,7 +22,7 @@ export interface IPost {
   user: Pick<IUserSchemaWithId, "fullName" | "avatarUrl" | "_id">
   viewsCount: number
   commentsCount: number
-  tags: string[]
+  tags: { name: string }[]
   isFullPost?: boolean
   isEditable?: boolean
 }
@@ -76,7 +76,7 @@ const Post = (
               {isFullPost ? title : <Link href={`/posts/${_id}`}>{title}</Link>}
             </h2>
             <ul className={styles.tags}>
-              {tags.map((name) => (
+              {tags?.map(({name}) => (
                 <li key={name}>
                   <Link href={`/tags/${name}`}>#{name}</Link>
                 </li>

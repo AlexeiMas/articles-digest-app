@@ -1,7 +1,6 @@
 import {createApi, fetchBaseQuery} from '@reduxjs/toolkit/query/react'
 import {IPost} from "@/components/Post"
-import {TPostDataForPage} from "@/validators/schemas/postSchema"
-import Required from "ajv/lib/vocabularies/validation/required"
+import {TPostDataFromPage} from "@/validators/schemas/postSchema"
 import {TSortBy} from "@/types/general"
 
 export const postsApi = createApi({
@@ -22,7 +21,7 @@ export const postsApi = createApi({
         url: `/api/posts/${id}`,
       })
     }),
-    createPost: builder.mutation<{ message: string, postId?: string }, TPostDataForPage>({
+    createPost: builder.mutation<{ message: string, postId?: string }, TPostDataFromPage>({
       query: (data) => ({
         url: `/api/posts`,
         method: 'POST',
@@ -36,7 +35,7 @@ export const postsApi = createApi({
       }),
       invalidatesTags: ["Posts"]
     }),
-    editPost: builder.mutation<{ message: string }, { id: string, body: TPostDataForPage }>({
+    editPost: builder.mutation<{ message: string }, { id: string, body: TPostDataFromPage }>({
       query: ({id, body}) => ({
         url: `/api/posts/${id}`,
         method: 'PATCH',

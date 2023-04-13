@@ -2,25 +2,26 @@ import React from 'react'
 import AlertComponent, {TAlertState} from "@/components/AlertComponent"
 import {useUploadImageMutation} from "@/store/services/uploads.api"
 import {useRemoveImageMutation} from "@/store/services/images.api"
-import {TPostDataForPage} from "@/validators/schemas/postSchema"
+import {TPostDataFromPage} from "@/validators/schemas/postSchema"
 import {Button, Paper, Stack, TextField} from "@mui/material"
 import Image from "next/image"
 import 'easymde/dist/easymde.min.css';
 import styles from "@/styles/AddPost.module.css"
 import Link from "next/link"
 import dynamic from "next/dynamic"
+import {IPost} from "@/components/Post"
 
 const SimpleMDE = dynamic(() => import("react-simplemde-editor"), {ssr: false})
 
 export interface IPostContainer {
-  data?: TPostDataForPage
-  onSubmitHandler: (args: TPostDataForPage) => void
+  data?: IPost
+  onSubmitHandler: (args: TPostDataFromPage) => void
 }
 
 const PostContainer = ({data, onSubmitHandler}: IPostContainer) => {
   const [title, setTitle] = React.useState<string>(data?.title || '')
   const [text, setText] = React.useState<string>(data?.text || '')
-  const [tags, setTags] = React.useState<string>(data?.tags?.join(', ') || '')
+  const [tags, setTags] = React.useState<string>(data?.tags?.map(({name}) => name).join(', ') || '')
   const [imageUrl, setImageUrl] = React.useState<string>(data?.imageUrl || '')
   const inputFileRef = React.useRef<HTMLInputElement>(null)
   const [isAlert, setIsAlert] = React.useState<TAlertState>({type: "error", message: ""})
@@ -63,7 +64,7 @@ const PostContainer = ({data, onSubmitHandler}: IPostContainer) => {
     if (!title || !text || !tags) {
       setIsAlert({type: "error", message: "Fields can't be empty. Fill them, please"})
     } else {
-      const fields: TPostDataForPage = {
+      const fields: TPostDataFromPage = {
         title,
         text,
         tags: tags.trim().replace(/\s+/g, ' ').split(', ' || ','),

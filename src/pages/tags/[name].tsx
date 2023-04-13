@@ -4,12 +4,12 @@ import {TRouter} from "@/types/general"
 import Head from "next/head"
 import {Grid, Typography} from "@mui/material"
 import Post from "@/components/Post"
-import {useGetAllPostsQuery} from "@/store/services/posts.api"
+import {useGetPostsByTagNameQuery} from "@/store/services/tags.api"
 import PostSkeleton from "@/components/Post/Skeleton"
 
-const Tags = ({router: {push, query}}: TRouter) => {
+const Tags = ({router: {query}}: TRouter) => {
   const {name} = query as { name: string }
-  const {data, isLoading} = useGetAllPostsQuery(undefined, {refetchOnMountOrArgChange: true})
+  const {data, isLoading} = useGetPostsByTagNameQuery(name, {refetchOnMountOrArgChange: true})
 
   const Skeleton = useMemo(() => [...Array(5)].map((_, i) => (
       <Grid xs={12} sm={6} item key={i}>

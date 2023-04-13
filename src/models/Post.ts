@@ -12,7 +12,12 @@ const PostSchema = new mongoose.Schema<IPostSchema>({
     unique: true
   },
   tags: {
-    type: Array,
+    type: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Tag"
+      }
+    ],
     default: []
   },
   viewsCount: {

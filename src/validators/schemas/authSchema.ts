@@ -30,9 +30,3 @@ export const loginSchema: JSONSchemaType<TUserLogin> = {
   required: ['email', 'password'],
   additionalProperties: false
 }
-
-export interface ITokenSchema {
-  user: { type: string, ref: string }
-  refreshToken: string
-  createdAt: Date
-}

@@ -1,7 +1,7 @@
 import {NextApiRequest, NextApiResponse} from "next"
 import withValidation from "@/validators/validate"
 import {IPostSchema, postSchema} from "@/validators/schemas/postSchema"
-import PostService from "@/services/PostService"
+import TagService from "@/services/TagService"
 import {ApiError} from "@/extensions/ApiError"
 import dbConnect from "@/lib/dbConnect"
 
@@ -12,7 +12,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
 
   switch (method) {
     case "GET":
-      const tags = await PostService.getLastTags()
+      const tags = await TagService.getPopularTags()
       if (tags) {
         return res.json(tags)
       }

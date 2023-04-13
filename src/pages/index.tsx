@@ -6,7 +6,7 @@ import CommentsBlock from "@/components/CommentsBlock"
 import TagsBlock from "@/components/TagsBlock"
 import PostSkeleton from "@/components/Post/Skeleton"
 import {useGetAllPostsQuery} from "@/store/services/posts.api"
-import {useGetLastTagsQuery} from "@/store/services/tags.api"
+import {useGetPopularTagsQuery} from "@/store/services/tags.api"
 import {useSession} from "next-auth/react"
 import {IUserDto} from "@/dtos/UserDto"
 import {useRouter} from "next/router"
@@ -16,7 +16,7 @@ export default function Home() {
   const {push, query} = useRouter()
   const sortBy = query.sortBy as TSortBy
   const {data, isLoading} = useGetAllPostsQuery(sortBy, {refetchOnMountOrArgChange: true})
-  const {data: tags, isLoading: isTagsLoading} = useGetLastTagsQuery()
+  const {data: tags, isLoading: isTagsLoading} = useGetPopularTagsQuery()
   const {data: session} = useSession()
   const [value, setValue] = useState(0)
 

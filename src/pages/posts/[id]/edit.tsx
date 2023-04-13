@@ -1,6 +1,6 @@
 import React from 'react'
 import {useEditPostMutation, useGetPostByIdQuery} from "@/store/services/posts.api"
-import {TPostDataForPage} from "@/validators/schemas/postSchema"
+import {TPostDataFromPage} from "@/validators/schemas/postSchema"
 import {withRouter} from "next/router"
 import Loader from "@/components/UI/Loader"
 import PostContainer from "@/containers/PostContainer"
@@ -15,7 +15,7 @@ const EditPost = ({router: {push, query}}: TRouter) => {
     return <Loader/>
   }
 
-  const onSubmitHandler = (fields: TPostDataForPage) => {
+  const onSubmitHandler = (fields: TPostDataFromPage) => {
     editPost({id, body: fields}).then(res => {
       if ('data' in res) {
         res.data.message && push(`/posts/${id}`)
