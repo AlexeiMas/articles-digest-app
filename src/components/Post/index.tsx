@@ -9,7 +9,7 @@ import cn from "classnames"
 import UserInfo from "@/components/UserInfo"
 import Link from "next/link"
 import styles from "./Post.module.css"
-import {IUserSchemaWithId} from "@/dtos/UserDto"
+import {ICommentBase, IUserBase} from "@/types/data"
 import {useRemovePostMutation} from "@/store/services/posts.api"
 import ConfirmComponent from "@/components/ConfirmComponent"
 
@@ -19,9 +19,10 @@ export interface IPost {
   text?: string
   createdAt: string
   imageUrl: string
-  user: Pick<IUserSchemaWithId, "fullName" | "avatarUrl" | "_id">
+  user: IUserBase
   viewsCount: number
-  commentsCount: number
+  commentsCount?: number
+  comments?: ICommentBase[]
   tags: { name: string }[]
   isFullPost?: boolean
   isEditable?: boolean

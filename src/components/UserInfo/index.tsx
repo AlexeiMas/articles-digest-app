@@ -10,7 +10,7 @@ const UserInfo = ({fullName, avatarUrl, additionalText}: Pick<IUserSchema, "full
       <Image
         width={30}
         height={30}
-        src={avatarUrl || '/noavatar.png'}
+        src={avatarUrl || ''}
         alt={fullName}
       />
       <Stack ml={1.5}>

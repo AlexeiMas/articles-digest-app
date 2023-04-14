@@ -1,20 +1,26 @@
 import React from 'react'
 import {Avatar, Divider, List, ListItem, ListItemAvatar, ListItemText, Skeleton} from "@mui/material"
 import SideBlock from "@/components/SideBlock"
-import {IUserSchemaWithId} from "@/dtos/UserDto"
+import Link from "next/link"
+import {ICommentBase} from "@/types/data"
 
 export type TItems = {
   isLoading: boolean
-  items: ({ user: Pick<IUserSchemaWithId, "fullName" | "avatarUrl"> } & {text: string})[]
+  items: ICommentBase[]
+  asLink?: boolean
 }
 
-const CommentsBlock = ({children, items, isLoading}: React.PropsWithChildren<TItems>) => {
+function options(this: string | undefined) {
+  return {component: Link, href: '/posts/' + this ?? ''}
+}
+
+const CommentsBlock = ({children, items, isLoading, asLink}: React.PropsWithChildren<TItems>) => {
   return (
-    <SideBlock title={"Comments"}>
+    <SideBlock title={"Recent comments"}>
       <List>
         {(isLoading ? [...Array(5)] : items).map((obj, index) => (
           <React.Fragment key={index}>
-            <ListItem alignItems="flex-start">
+            <ListItem {...asLink ? options.call(obj?.postId) : {}} alignItems="flex-start">
               <ListItemAvatar>
                 {isLoading ? (
                   <Skeleton variant="circular" width={40} height={40} />
@@ -37,6 +43,7 @@ const CommentsBlock = ({children, items, isLoading}: React.PropsWithChildren<TIt
             <Divider variant="inset" component="li" />
           </React.Fragment>
         ))}
+        {!isLoading && items.length < 1 && <ListItem><i>No comments yet</i></ListItem>}
       </List>
       {children}
     </SideBlock>

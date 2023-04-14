@@ -8,6 +8,7 @@ import {postsApi} from "@/store/services/posts.api"
 import {tagsApi} from "@/store/services/tags.api"
 import {uploadsApi} from "@/store/services/uploads.api"
 import {imagesApi} from "@/store/services/images.api"
+import {commentsApi} from "@/store/services/comments.api"
 
 const createNoopStorage = () => {
   return {
@@ -23,7 +24,8 @@ const rootReducer = combineReducers({
   [postsApi.reducerPath]: postsApi.reducer,
   [tagsApi.reducerPath]: tagsApi.reducer,
   [uploadsApi.reducerPath]: uploadsApi.reducer,
-  [imagesApi.reducerPath]: imagesApi.reducer
+  [imagesApi.reducerPath]: imagesApi.reducer,
+  [commentsApi.reducerPath]: commentsApi.reducer
 })
 
 const makeConfiguredStore = () =>
@@ -52,7 +54,7 @@ const makeStore = () => {
           serializableCheck: {
             ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER]
           },
-        }).concat(postsApi.middleware, tagsApi.middleware, uploadsApi.middleware, imagesApi.middleware)
+        }).concat(postsApi.middleware, tagsApi.middleware, uploadsApi.middleware, imagesApi.middleware, commentsApi.middleware)
     })
     store.__persistor = persistStore(store)
     return store

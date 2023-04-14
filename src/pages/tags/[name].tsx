@@ -9,7 +9,7 @@ import PostSkeleton from "@/components/Post/Skeleton"
 
 const Tags = ({router: {query}}: TRouter) => {
   const {name} = query as { name: string }
-  const {data, isLoading} = useGetPostsByTagNameQuery(name, {refetchOnMountOrArgChange: true})
+  const {data, isLoading} = useGetPostsByTagNameQuery(name, {skip: !name, refetchOnMountOrArgChange: true})
 
   const Skeleton = useMemo(() => [...Array(5)].map((_, i) => (
       <Grid xs={12} sm={6} item key={i}>
@@ -17,6 +17,7 @@ const Tags = ({router: {query}}: TRouter) => {
       </Grid>
     )
   ), [])
+
   return (
     <>
       <Head>
@@ -37,7 +38,7 @@ const Tags = ({router: {query}}: TRouter) => {
                 imageUrl={item.imageUrl}
                 user={item.user}
                 viewsCount={item.viewsCount}
-                commentsCount={item.commentsCount}
+                commentsCount={item.comments?.length}
                 tags={item.tags}
               />
             </Grid>

@@ -14,9 +14,7 @@ const initialState: Record<"posts" | "tags", {items: string[], status: string}> 
 const PostSlice = createSlice({
   name: 'posts',
   initialState,
-  reducers: {
-
-  }
+  reducers: {}
 })
 
 export const PostsActions = PostSlice.actions

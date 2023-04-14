@@ -31,6 +31,15 @@ const PostSchema = new mongoose.Schema<IPostSchema>({
   },
   imageUrl: {
     type: String
+  },
+  comments: {
+    type: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Comment"
+      }
+    ],
+    default: []
   }
 }, {
   timestamps: true

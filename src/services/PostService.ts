@@ -1,10 +1,11 @@
 import {IPostSchema} from "@/validators/schemas/postSchema"
 import Post from "@/models/Post"
+import Tag from "@/models/Tag"
+import Comment from "@/models/Comment"
 import {Error} from "mongoose"
 import {ApiError} from "@/extensions/ApiError"
 import fs from "fs"
 import {TSortBy} from "@/types/general"
-import Tag from "@/models/Tag"
 import {ITagSchema} from "@/types/data"
 
 class PostService {
@@ -13,7 +14,7 @@ class PostService {
       const {tags, ...fields} = args
       const post = new Post<IPostSchema>({...fields})
       const tagsTuple = tags ? tags.map((name) => {
-        return Tag.findOne({name}).exec().then((tag) => {
+        return Tag.findOne({name}).then((tag) => {
           if (!tag) {
             return (new Tag<ITagSchema>({name, posts: [post._id]})).save()
           }
@@ -32,17 +33,21 @@ class PostService {
   }
 
   async getAll(sortBy: TSortBy = "createdAt") {
-    return await Post.find({}, null, {sort: {[sortBy]: -1}})
-      .populate([
-        {
-          path: 'user',
-          select: '-password',
-        },
-        {
-          path: 'tags',
-          select: '-_id name',
-        }
-      ]).exec()
+    try {
+      return await Post.find({}, null, {sort: {[sortBy]: -1}})
+        .populate([
+          {
+            path: 'user',
+            select: '-password',
+          },
+          {
+            path: 'tags',
+            select: '-_id name',
+          }
+        ]).exec()
+    } catch (e) {
+      throw ApiError.InternalServerError((e as Error).message)
+    }
   }
 
   async getOne(id: string) {
@@ -59,7 +64,15 @@ class PostService {
         {
           path: 'tags',
           select: '-_id name',
-        }
+        },
+        {
+          path: 'comments',
+          select: 'user text',
+          populate: {
+            path: 'user',
+            select: 'fullName avatarUrl'
+          }
+        },
       ]).exec()
     } catch (e) {
       throw ApiError.NotFound('Post is not found')
@@ -79,6 +92,7 @@ class PostService {
       }
       await Tag.updateMany({_id: {$in: doc.tags}}, {$pull: {posts: doc._id}})
       await Tag.deleteMany({posts: []})
+      await Comment.deleteMany({postId: id})
       return doc
     } catch (e) {
       throw ApiError.NotFound('Post is not found')
@@ -98,11 +112,14 @@ class PostService {
       ).save()) : []
       const newTags = await Promise.all(newData)
       const checkUrl = fields.imageUrl ? {} : {$unset: {imageUrl: 1}}
-      return await Post.updateOne(
-        {_id: id},
+      const updatedData = await Post.findByIdAndUpdate(
+        id,
         {...fields, tags: [...existedTags, ...newTags], ...checkUrl},
         {new: true}
       )
+      await Tag.updateMany({posts: id, _id: {$nin: updatedData.tags}}, {$pull: {posts: id}})
+      await Tag.deleteMany({posts: []})
+      return updatedData
     } catch (e) {
       throw ApiError.NotFound('Post is not found')
     }

@@ -6,7 +6,8 @@ import CommentsBlock from "@/components/CommentsBlock"
 import TagsBlock from "@/components/TagsBlock"
 import PostSkeleton from "@/components/Post/Skeleton"
 import {useGetAllPostsQuery} from "@/store/services/posts.api"
-import {useGetPopularTagsQuery} from "@/store/services/tags.api"
+import {useGetPopularTagsQuery, useLazyGetPopularTagsQuery} from "@/store/services/tags.api"
+import {useGetRecentCommentsQuery, useLazyGetRecentCommentsQuery} from "@/store/services/comments.api"
 import {useSession} from "next-auth/react"
 import {IUserDto} from "@/dtos/UserDto"
 import {useRouter} from "next/router"
@@ -17,6 +18,9 @@ export default function Home() {
   const sortBy = query.sortBy as TSortBy
   const {data, isLoading} = useGetAllPostsQuery(sortBy, {refetchOnMountOrArgChange: true})
   const {data: tags, isLoading: isTagsLoading} = useGetPopularTagsQuery()
+  const [updateTags] = useLazyGetPopularTagsQuery()
+  const {data: comments, isLoading: isCommentsLoading} = useGetRecentCommentsQuery()
+  const [updateComments] = useLazyGetRecentCommentsQuery()
   const {data: session} = useSession()
   const [value, setValue] = useState(0)
 
@@ -33,6 +37,13 @@ export default function Home() {
       setValue(1)
     }
   }, [sortBy])
+
+  useEffect(() => {
+    if (!isLoading && data) {
+      updateTags()
+      updateComments()
+    }
+  }, [data])
 
   const handleChange = (event: SyntheticEvent, newValue: number) => {
     setValue(newValue)
@@ -63,7 +74,7 @@ export default function Home() {
                     imageUrl={item.imageUrl}
                     user={item.user}
                     viewsCount={item.viewsCount}
-                    commentsCount={item.commentsCount}
+                    commentsCount={item.comments?.length}
                     tags={item.tags}
                     isEditable={userId === item.user._id}
                   />
@@ -74,23 +85,9 @@ export default function Home() {
           <Grid xs={4} item>
             <TagsBlock items={tags || []} isLoading={isTagsLoading}/>
             <CommentsBlock
-              items={[
-                {
-                  user: {
-                    fullName: 'User First',
-                    avatarUrl: 'https://mui.com/static/images/avatar/1.jpg',
-                  },
-                  text: 'This is test comment',
-                },
-                {
-                  user: {
-                    fullName: 'User Second',
-                    avatarUrl: 'https://mui.com/static/images/avatar/2.jpg',
-                  },
-                  text: 'One more test comment',
-                },
-              ]}
-              isLoading={false}
+              items={comments || []}
+              isLoading={isCommentsLoading}
+              asLink
             />
           </Grid>
         </Grid>

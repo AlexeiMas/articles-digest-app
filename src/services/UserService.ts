@@ -2,7 +2,6 @@ import {IUserSchema, TUserLogin} from "@/validators/schemas/authSchema"
 import User from "@/models/User"
 import {ApiError} from "@/extensions/ApiError"
 import bcrypt from "bcrypt"
-// import TokenService from "@/services/TokenService"
 import {UserDto} from "@/dtos/UserDto"
 
 class UserService {
@@ -20,14 +19,8 @@ class UserService {
     })
     const user = await userDoc.save()
 
-    // const tokens = TokenService.generateTokens({
-    //     _id: user._id
-    //   })
-    // await TokenService.saveToken(user._id, tokens.refreshToken)
-
     return {
-      user,
-      // ...tokens
+      user
     }
   }
 
@@ -41,11 +34,8 @@ class UserService {
       throw ApiError.BadRequest('Wrong email or password')
     }
     const userDto = new UserDto(user)
-    // const tokens = TokenService.generateTokens({...userDto})
-    // await TokenService.saveToken(user._id, tokens.refreshToken)
 
     return {
-      // ...tokens,
       user: userDto
     }
   }

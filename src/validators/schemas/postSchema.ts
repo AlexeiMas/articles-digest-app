@@ -7,6 +7,7 @@ export interface IPostSchema {
   viewsCount?: number
   user: {type: string, ref: string} | string
   imageUrl?: string
+  comments?: {type: string, ref: string} | string[]
 }
 
 export const postSchema: JSONSchemaType<IPostSchema> = {
@@ -17,7 +18,8 @@ export const postSchema: JSONSchemaType<IPostSchema> = {
     tags: {type: "array", items: {type: "string"}, uniqueItems: true, nullable: true},
     viewsCount: {type: "number", nullable: true},
     user: {type: "string"},
-    imageUrl: {type: 'string', format: 'uri', nullable: true}
+    imageUrl: {type: 'string', format: 'uri', nullable: true},
+    comments: {type: "array", items: {type: "string"}, uniqueItems: true, nullable: true},
   },
   required: ['title', 'text'],
   additionalProperties: false

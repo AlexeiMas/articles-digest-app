@@ -19,4 +19,4 @@ export const tagsApi = createApi({
   })
 })
 
-export const {useGetPopularTagsQuery, useGetPostsByTagNameQuery} = tagsApi
+export const {useGetPopularTagsQuery, useLazyGetPopularTagsQuery, useGetPostsByTagNameQuery} = tagsApi
