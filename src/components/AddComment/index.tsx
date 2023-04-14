@@ -14,6 +14,9 @@ const AddComment = ({postId}: { postId: string }) => {
   const [updateComments] = useLazyGetPostByIdQuery()
 
   const onSend = async () => {
+    if (!session) {
+      return setIsAlert((prevState) => ({...prevState, message: "User is not authorized"}))
+    }
     if (text.length > 0) {
       const fields: Omit<ICommentSchema, "user"> = {
         text,
@@ -23,7 +26,7 @@ const AddComment = ({postId}: { postId: string }) => {
       setText('')
       await updateComments(postId)
     } else {
-      setIsAlert((prevState) => ({...prevState, message: "Comment content cannot be empty. Write something."}))
+      setIsAlert((prevState) => ({...prevState, message: "Comment content cannot be empty. Write something"}))
     }
   }
 
@@ -44,7 +47,7 @@ const AddComment = ({postId}: { postId: string }) => {
             value={text}
             onChange={(e) => setText(e.target.value)}
           />
-          <Button variant="contained" onClick={onSend} sx={{marginTop: 2}}>Send</Button>
+          <Button variant="contained" disabled={text === '' || !session} onClick={onSend} sx={{marginTop: 2}}>Send</Button>
         </Box>
       </Stack>
       <AlertComponent message={isAlert.message} open={!!isAlert.message} setOpen={setIsAlert}/>
